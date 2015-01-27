@@ -52,13 +52,8 @@ public class RegistrationActivity extends Activity implements OnClickListener{
 		
 		if (!Validation.hasText(mName))
 			valid = false;
-		if (!Validation.hasText(mMobile))
-		{
+		if (!Validation.isPhoneNumber(mMobile, true))
 			valid = false;
-		}else if (mMobile.getText().toString().length()>10) {
-			mMobile.setError("Enter 10 digits number");
-			valid = false;
-		}
 		if (!Validation.isEmailAddress(mEmailId, true))
 			valid = false;
 		

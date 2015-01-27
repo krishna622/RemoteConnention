@@ -11,7 +11,7 @@ public class Validation {
     // Regular Expression
     // you can change the expression based on your need
     private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	private static final String PHONE_REGEX = "\\d{7,19}";
+	private static final String PHONE_REGEX = "\\d{10,10}";
     private static final String TIME24HOURS_REGEX = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
     private static final String DATE_REGEX = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
     private static final String VISA_REGEX = "^4[0-9]{12}(?:[0-9]{3})?$";
@@ -25,7 +25,7 @@ public class Validation {
     private static final String REQUIRED_MSG = "required";
     private static final String EMAIL_MSG = "invalid email";
     private static final String URL_MSG = "invalid url";
-    private static final String PHONE_MSG = "7-19 Digits";
+    private static final String PHONE_MSG = "10 Digits";
     private static final String PASS_MATCH = "Password Doesn't Match";
     private static final String USER_AUTHENTICATE = "Username or Password is incorrect.........";
     private static final String TIME_MSG = "HH:MM (24 HOURS)";
