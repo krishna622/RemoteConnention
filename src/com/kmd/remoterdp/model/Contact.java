@@ -1,6 +1,6 @@
 package com.kmd.remoterdp.model;
 
-public class Contact {
+public class Contact extends BaseModel{
  
 	private String name;
 	private String number;

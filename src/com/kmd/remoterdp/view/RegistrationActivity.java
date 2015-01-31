@@ -3,6 +3,7 @@ package com.kmd.remoterdp.view;
 import android.provider.Settings;
 import android.widget.Toast;
 import com.kmd.remoterdp.R;
+import com.kmd.remoterdp.network.ServiceResponse;
 import com.kmd.remoterdp.utils.Validation;
 
 import android.app.Activity;
@@ -13,7 +14,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class RegistrationActivity extends Activity implements OnClickListener{
+public class RegistrationActivity extends BaseActivity implements OnClickListener{
 
 	private EditText mName, mEmailId, mMobile;
 	private Button mRegister;
@@ -36,6 +37,8 @@ public class RegistrationActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_register:
+            showProgressDialog();
+			fetchData("vdsfds",3,"jfh");
 			//if(checkValidation())
 			//{
 				Toast.makeText(this,getDeviceId(),Toast.LENGTH_LONG).show();
@@ -76,5 +79,19 @@ public class RegistrationActivity extends Activity implements OnClickListener{
 		String device_id = null;
 			device_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 		return device_id;
+	}
+
+	@Override
+	public void updateUi(ServiceResponse response) {
+        removeProgressDialog();
+		if(response.getErrorCode() == SUCCESS){
+			//ToDo Go to poarse data
+			switch (response.getAction()){
+				case 1:
+					break;
+			}
+		}else{
+			Toast.makeText(this,response.getErrorMsg(),Toast.LENGTH_SHORT).show();
+		}
 	}
 }
