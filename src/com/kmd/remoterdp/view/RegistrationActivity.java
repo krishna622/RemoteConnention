@@ -1,5 +1,7 @@
 package com.kmd.remoterdp.view;
 
+import android.provider.Settings;
+import android.widget.Toast;
 import com.kmd.remoterdp.R;
 import com.kmd.remoterdp.utils.Validation;
 
@@ -34,18 +36,23 @@ public class RegistrationActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_register:
-			if(checkValidation())
-			{
-				Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-				startActivity(intent);
-			}
+			//if(checkValidation())
+			//{
+				Toast.makeText(this,getDeviceId(),Toast.LENGTH_LONG).show();
+//				Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+//				startActivity(intent);
+			//}
 			break;
 
 		default:
 			break;
 		}
 	}
-	
+
+	/**
+	 * check field validation
+	 * @return
+	 */
 	private boolean checkValidation()
 	{
 		boolean valid = true;
@@ -58,5 +65,16 @@ public class RegistrationActivity extends Activity implements OnClickListener{
 			valid = false;
 		
 		return valid;
+	}
+
+	/**
+	 * get device id
+	 * @return
+	 */
+	private String getDeviceId()
+	{
+		String device_id = null;
+			device_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+		return device_id;
 	}
 }
