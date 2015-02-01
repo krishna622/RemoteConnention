@@ -34,7 +34,7 @@ public class BaseActivity extends Activity implements Response.Listener, Respons
     }
 
     public void fetchData(String url,int action,String postData){
-        VolleyRequest request = new VolleyRequest(url,action,postData,this);
+        VolleyRequest request = new VolleyRequest(url,action,postData,this,this);
         VolleyHelper.getInstance(this).addRequestInQueue(request);
     }
 

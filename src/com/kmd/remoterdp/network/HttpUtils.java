@@ -3,9 +3,10 @@
  */
 package com.kmd.remoterdp.network;
 
+import android.util.Config;
 import android.util.Log;
 import com.android.volley.TimeoutError;
-import com.pointburst.jaden.BuildConfig;
+
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -24,7 +25,7 @@ public class HttpUtils {
 	 * @return
 	 */
 	public static String getErrorMessage(Exception pException) {
-		if (BuildConfig.DEBUG) {
+		if (Config.DEBUG) {
 			Log.e(LOG_TAG, "getErrorMessage() " + pException);
 		}
 		if (pException instanceof URISyntaxException) {

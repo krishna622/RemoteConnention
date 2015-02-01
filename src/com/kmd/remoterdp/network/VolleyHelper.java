@@ -45,7 +45,7 @@ public class VolleyHelper{
 
     private static VolleyHelper mInstance;
     private RequestQueue mQueue;
-    private ArrayList<VolleyGenericRequest> mPendingRequests;
+    private ArrayList<VolleyRequest> mPendingRequests;
     private DefaultRetryPolicy mDefaultRetryPolicy;
 
     /**
@@ -60,7 +60,7 @@ public class VolleyHelper{
             mInstance = new VolleyHelper();
             HttpClient client = getNewHttpClient(new BasicHttpParams());
             mInstance.mQueue = Volley.newRequestQueue(ctx, new HttpClientStack(client));
-            mInstance.mPendingRequests = new ArrayList<VolleyGenericRequest>();
+            mInstance.mPendingRequests = new ArrayList<VolleyRequest>();
             mInstance.mDefaultRetryPolicy = new DefaultRetryPolicy(
                     API_TIMEOUT,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
@@ -84,8 +84,8 @@ public class VolleyHelper{
         request.setRetryPolicy(mDefaultRetryPolicy);
 
         mQueue.add(request);
-        if (request instanceof VolleyGenericRequest) {
-            mPendingRequests.add((VolleyGenericRequest)request);
+        if (request instanceof VolleyRequest) {
+            mPendingRequests.add((VolleyRequest)request);
         }
 
     }

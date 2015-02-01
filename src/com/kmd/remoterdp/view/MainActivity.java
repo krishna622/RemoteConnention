@@ -21,7 +21,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        FatchContactList.ContactList(MainActivity.this);
+        //FatchContactList.ContactList(MainActivity.this);
         
         mlist = (ListView) findViewById(R.id.list);
         adapter = new MainAdapter(MainActivity.this);
@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity {
       if(response.getErrorCode() == SUCCESS){
           //ToDo Go to poarse data
           switch (response.getAction()){
-              case 1:
+              case 2:
                   break;
           }
       }else{

@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by FARHAN on 2/1/2015.
  */
-public class VolleyRequest extends Request{
+public class VolleyRequest extends Request<ServiceResponse>{
 
     private int action;
     private String postData;
@@ -35,10 +35,15 @@ public class VolleyRequest extends Request{
     private static final String PROTOCOL_CONTENT_TYPE =
             String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
-    public VolleyRequest(String url, int action,String postData,Response.ErrorListener listener) {
-        super(StringUtil.isNullOrEmpty(postData)==true?Method.GET:Method.POST, url, listener);
+    private Response.ErrorListener errorListener;
+    private Response.Listener successListener;
+
+    public VolleyRequest(String url, int action,String postData,Response.ErrorListener errorListener,Response.Listener successListener) {
+        super(StringUtil.isNullOrEmpty(postData)==true?Method.GET:Method.POST, url, errorListener);
         this.action = action;
         this.postData = postData;
+        this.successListener = successListener;
+        this.errorListener = errorListener;
 
     }
 
@@ -57,18 +62,21 @@ public class VolleyRequest extends Request{
             response.setAction(action);
             response.setJsonString(jsonString);
             response.setErrorCode(1);
-
-            return Response.success(jsonString, HttpHeaderParser.parseCacheHeaders(networkResponse));
+            successListener.onResponse(response);
+            return null;
 
         } catch (Exception e) {
-            return Response.error(new ParseError(e));
+            Log.e("Response",e.getMessage());
+            errorListener.onErrorResponse(new ParseError(e));
+            return null;
         }
     }
 
     @Override
-    protected void deliverResponse(Object o) {
+    protected void deliverResponse(ServiceResponse serviceResponse) {
 
     }
+
 
     /**
      * @deprecated Use {@link #getBodyContentType()}.
