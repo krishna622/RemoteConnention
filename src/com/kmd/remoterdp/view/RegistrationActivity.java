@@ -11,8 +11,6 @@ import com.kmd.remoterdp.model.request.RegistrationRequest;
 import com.kmd.remoterdp.network.ServiceResponse;
 import com.kmd.remoterdp.utils.Validation;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,14 +35,6 @@ public class RegistrationActivity extends BaseActivity implements OnClickListene
 		mName = (EditText) findViewById(R.id.edt_registration_name);
 		mRegister = (Button) findViewById(R.id.btn_register);
 
-		registrationRequest = new RegistrationRequest();
-		registrationRequest.setEmail(mEmailId.getText().toString());
-		registrationRequest.setPhone_no(mMobile.getText().toString());
-		registrationRequest.setUserName(mName.getText().toString());
-		registrationRequest.setDevice_id(getDeviceId());
-		registrationRequest.setAction(WebAction.regAction);
-
-		
 		mRegister.setOnClickListener(this);
 	}
 
@@ -54,6 +44,15 @@ public class RegistrationActivity extends BaseActivity implements OnClickListene
 		case R.id.btn_register:
 			if(checkValidation())
 			{
+				Log.d("name",":"+ mName.getText().toString());
+				Log.d("EmailId",":"+ mEmailId.getText().toString());
+				Log.d("Mobile",":"+ mMobile.getText().toString());
+				registrationRequest = new RegistrationRequest();
+				registrationRequest.setEmail(mEmailId.getText().toString());
+				registrationRequest.setPhone_no(mMobile.getText().toString());
+				registrationRequest.setUserName(mMobile.getText().toString());
+				registrationRequest.setDevice_id(getDeviceId());
+				registrationRequest.setAction(WebAction.regAction);
             showProgressDialog();
 			JSONObject regJson = new JSONObject();
 			try {
@@ -108,17 +107,40 @@ public class RegistrationActivity extends BaseActivity implements OnClickListene
 	@Override
 	public void updateUi(ServiceResponse response) {
         removeProgressDialog();
-		if(response.getErrorCode() == SUCCESS){
+		if(response.getErrorCode() == SUCCESS)
+		{
 
-			switch (response.getAction()){
-				case 0:
-					Log.d("KrishnaReg",response.getJsonString());
-					break;
-				case 1:
-					Log.d("KrishnaContactList",response.getJsonString());
-					break;
+				switch (response.getAction())
+				{
+					case 0:
+						Log.d("KrishnaReg", response.getJsonString());
+						try
+						{
+							JSONObject reader = new JSONObject(response.getJsonString());
+							int isSaved = Integer.parseInt(reader.getString("isSaved"));
+							switch (isSaved)
+							{
+								case 0:
+									Toast.makeText(this, "data missing", Toast.LENGTH_SHORT).show();
+								break;
+								case 1:
+
+								break;
+								case 2:
+									Toast.makeText(this, "Your data has been updated", Toast.LENGTH_SHORT).show();
+								break;
+							}
+						}
+						catch (Exception e)
+						{
+						}
+						break;
+						case 1:
+							Log.d("KrishnaContactList", response.getJsonString());
+							break;
+				}
 			}
-		}else{
+		else{
 			Toast.makeText(this,response.getErrorMsg(),Toast.LENGTH_SHORT).show();
 		}
 	}

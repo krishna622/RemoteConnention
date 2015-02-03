@@ -13,7 +13,7 @@ import android.app.Activity;
 
 public class MainActivity extends BaseActivity {
 
-	private ListView mlist;
+	private ListView mList;
 	private MainAdapter adapter;
 	
     @Override
@@ -21,11 +21,11 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        //FatchContactList.ContactList(MainActivity.this);
-        
-        mlist = (ListView) findViewById(R.id.list);
+        //FetchContactList.ContactList(MainActivity.this);
+
+        mList = (ListView) findViewById(R.id.list);
         adapter = new MainAdapter(MainActivity.this);
-        mlist.setAdapter(adapter);
+        mList.setAdapter(adapter);
 
 
     }
@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity {
     public void updateUi(ServiceResponse response) {
 
       if(response.getErrorCode() == SUCCESS){
-          //ToDo Go to poarse data
+          //ToDo Go to parse data
           switch (response.getAction()){
               case 2:
                   break;
