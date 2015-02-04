@@ -1,5 +1,6 @@
 package com.kmd.remoterdp.view;
 
+import android.content.Intent;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -7,8 +8,11 @@ import com.kmd.remoterdp.R;
 import com.kmd.remoterdp.constants.ActionType;
 import com.kmd.remoterdp.constants.RDPConstants;
 import com.kmd.remoterdp.constants.WebAction;
+import com.kmd.remoterdp.model.Contact;
 import com.kmd.remoterdp.model.request.RegistrationRequest;
 import com.kmd.remoterdp.network.ServiceResponse;
+import com.kmd.remoterdp.persistence.CustomSharedPreference;
+import com.kmd.remoterdp.utils.FatchContactList;
 import com.kmd.remoterdp.utils.Validation;
 
 import android.os.Bundle;
@@ -16,13 +20,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class RegistrationActivity extends BaseActivity implements OnClickListener{
 
 	private EditText mName, mEmailId, mMobile;
 	private Button mRegister;
 	private RegistrationRequest registrationRequest;
+	private CustomSharedPreference mPref;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +43,40 @@ public class RegistrationActivity extends BaseActivity implements OnClickListene
 		mName = (EditText) findViewById(R.id.edt_registration_name);
 		mRegister = (Button) findViewById(R.id.btn_register);
 
+		mPref = new CustomSharedPreference(RegistrationActivity.this);
+		if(mPref.getString(RDPConstants.registrationStatus,"null")!=null &&
+				mPref.getString(RDPConstants.registrationStatus,"null").equals("1"))
+		{
+			if(mPref.getString(RDPConstants.contactStatus,"null")!=null &&
+					mPref.getString(RDPConstants.contactStatus,"null").equals("2"))
+			{
+				Intent intent = new Intent(RegistrationActivity.this,MainActivity.class);
+				startActivity(intent);
+				finish();
+			}else{
+				showProgressDialog();
+				ArrayList<Contact> mContacts = FatchContactList.ContactList(RegistrationActivity.this);
+				try {
+					JSONObject obj = new JSONObject();
+					obj.put("action","contactlist");
+					obj.put("username",mPref.getString(RDPConstants.userName,"null"));
+					JSONArray arr = new JSONArray();
+					for (int i=0; i<mContacts.size(); i++)
+					{
+						JSONObject data = new JSONObject();
+						data.put("name",mContacts.get(i).getName());
+						data.put("phoneno",mContacts.get(i).getNumber());
+						arr.put(i,data);
+					}
+					obj.put("contactlist",arr);
+
+					//removeProgressDialog();
+					Log.d("ContactList",obj.toString());
+					fetchData(RDPConstants.url, ActionType.CONTACT, obj.toString());
+				}catch (Exception e){}
+			}
+		}
+
 		mRegister.setOnClickListener(this);
 	}
 
@@ -44,14 +86,17 @@ public class RegistrationActivity extends BaseActivity implements OnClickListene
 		case R.id.btn_register:
 			if(checkValidation())
 			{
-				Log.d("name",":"+ mName.getText().toString());
-				Log.d("EmailId",":"+ mEmailId.getText().toString());
-				Log.d("Mobile",":"+ mMobile.getText().toString());
 				registrationRequest = new RegistrationRequest();
-				registrationRequest.setEmail(mEmailId.getText().toString());
-				registrationRequest.setPhone_no(mMobile.getText().toString());
-				registrationRequest.setUserName(mMobile.getText().toString());
-				registrationRequest.setDevice_id(getDeviceId());
+				registrationRequest.setEmail(mEmailId.getText().toString().trim());
+				registrationRequest.setPhone_no(mMobile.getText().toString().trim());
+				registrationRequest.setUserName(mName.getText().toString().trim());
+				String deviceId = getDeviceId();
+				if(deviceId==null || deviceId.contains("??"))
+				{
+					registrationRequest.setDevice_id(mEmailId.getText().toString());
+				}else{
+					registrationRequest.setDevice_id(deviceId);
+				}
 				registrationRequest.setAction(WebAction.regAction);
             showProgressDialog();
 			JSONObject regJson = new JSONObject();
@@ -124,10 +169,36 @@ public class RegistrationActivity extends BaseActivity implements OnClickListene
 									Toast.makeText(this, "data missing", Toast.LENGTH_SHORT).show();
 								break;
 								case 1:
+										mPref.putString(RDPConstants.userName,registrationRequest.getUserName());
+										mPref.putString(RDPConstants.registrationStatus,"1");
+										showProgressDialog();
+										ArrayList<Contact> mContacts = FatchContactList.ContactList(RegistrationActivity.this);
+									try {
+										JSONObject obj = new JSONObject();
+										obj.put("action","contactlist");
+										obj.put("username",registrationRequest.getUserName());
+										JSONArray arr = new JSONArray();
+										for (int i=0; i<mContacts.size(); i++)
+										{
+											JSONObject data = new JSONObject();
+											data.put("name",mContacts.get(i).getName());
+											data.put("phoneno",mContacts.get(i).getNumber());
+											arr.put(i,data);
+										}
+										obj.put("contactlist",arr);
 
+										//removeProgressDialog();
+										Log.d("ContactList",obj.toString());
+										fetchData(RDPConstants.url, ActionType.CONTACT, obj.toString());
+									}catch (Exception e){}
 								break;
 								case 2:
+									mPref.putString(RDPConstants.registrationStatus,"1");
+									mPref.putString(RDPConstants.contactStatus,"2");
 									Toast.makeText(this, "Your data has been updated", Toast.LENGTH_SHORT).show();
+									Intent intentHome = new Intent(RegistrationActivity.this,MainActivity.class);
+									startActivity(intentHome);
+									finish();
 								break;
 							}
 						}
@@ -137,6 +208,20 @@ public class RegistrationActivity extends BaseActivity implements OnClickListene
 						break;
 						case 1:
 							Log.d("KrishnaContactList", response.getJsonString());
+							try {
+								mPref.putString(RDPConstants.contactStatus,"2");
+								JSONObject resJson = new JSONObject(response.getJsonString());
+								boolean isSaved = Boolean.parseBoolean(resJson.getString("isSaved"));
+								if(isSaved)
+								{
+									Toast.makeText(this, "Contact saved successfully", Toast.LENGTH_SHORT).show();
+									Intent intentHome = new Intent(RegistrationActivity.this,MainActivity.class);
+									startActivity(intentHome);
+									finish();
+								}else{
+									Toast.makeText(this, "Contact does not saved", Toast.LENGTH_SHORT).show();
+								}
+							}catch(Exception e){}
 							break;
 				}
 			}

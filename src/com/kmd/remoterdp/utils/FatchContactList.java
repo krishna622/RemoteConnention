@@ -35,6 +35,10 @@ public class FatchContactList {
                          //Toast.makeText(context, "Name: " + name + ", Phone No: " + phoneNo, Toast.LENGTH_SHORT).show();
                          Log.d("Name:", name);
                          Log.d("Phone No:", phoneNo);
+                         Contact contact = new Contact();
+                         contact.setName(name);
+                         contact.setNumber(phoneNo);
+                         mContacts.add(contact);
                      }
                     pCur.close();
                 }

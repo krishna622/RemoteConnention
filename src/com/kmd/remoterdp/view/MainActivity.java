@@ -21,7 +21,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        //FetchContactList.ContactList(MainActivity.this);
+        //FatchContactList.ContactList(MainActivity.this);
 
         mList = (ListView) findViewById(R.id.list);
         adapter = new MainAdapter(MainActivity.this);

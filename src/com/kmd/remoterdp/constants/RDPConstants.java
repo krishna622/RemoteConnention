@@ -5,4 +5,7 @@ package com.kmd.remoterdp.constants;
  */
 public class RDPConstants {
     public static String url = "http://www.heritagecpl.com/cx/ServicesController.php";
+    public static String registrationStatus = "registration";
+    public static String contactStatus = "contactList";
+    public static String userName = "userName";
 }
