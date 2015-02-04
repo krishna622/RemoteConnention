@@ -39,35 +39,49 @@ public class BaseActivity extends Activity implements Response.Listener, Respons
     }
 
     @Override
-    public void onResponse(Object o) {
-        updateUi((ServiceResponse)o);
+    public void onResponse(final Object o) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateUi((ServiceResponse)o);
+            }
+        });
+
     }
 
     @Override
-    public void onErrorResponse(VolleyError error) {
-        String errorMsg = "Some thing went wrong.";
-        if( error instanceof NetworkError) {
-            errorMsg = "Network Connection is not available.";
-        } else if( error instanceof ServerError) {
-            errorMsg = "Server Error";
+    public void onErrorResponse(final VolleyError error) {
 
-        } else if( error instanceof AuthFailureError) {
-            errorMsg = "Auth Error";
-        } else if( error instanceof ParseError) {
-            errorMsg = "Parsing Error";
-        } else if( error instanceof NoConnectionError) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String errorMsg = "";
+                if( error instanceof NetworkError) {
+                    errorMsg = "Network Connection is not available.";
+                } else if( error instanceof ServerError) {
+                    errorMsg = "Server Error";
 
-            errorMsg = "No connection could be established.";
+                } else if( error instanceof AuthFailureError) {
+                    errorMsg = "Auth Error";
+                } else if( error instanceof ParseError) {
+                    errorMsg = "Parsing Error";
+                } else if( error instanceof NoConnectionError) {
 
-        } else if( error instanceof TimeoutError) {
-            errorMsg = "Network Connection Time out";
-        }
+                    errorMsg = "No connection could be established.";
 
-        ServiceResponse response = new ServiceResponse();
-        response.setErrorCode(0);
-        response.setErrorMsg(errorMsg);
+                } else if( error instanceof TimeoutError) {
+                    errorMsg = "Network Connection Time out";
+                }
 
-        updateUi(response);
+                ServiceResponse response = new ServiceResponse();
+                response.setErrorCode(0);
+                response.setErrorMsg(errorMsg);
+
+                updateUi(response);
+            }
+        });
+
+       ;
     }
 
 

@@ -58,6 +58,7 @@
             android:padding="@dimen/dp_10"
             android:background="@drawable/border"
             android:inputType="number"
+            android:maxLength="10"
             android:layout_marginBottom="@dimen/dp_18"
             android:textSize="@dimen/dp_14" />
 
