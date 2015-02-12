@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by FARHAN on 2/1/2015.
  */
-public class VolleyRequest extends Request<ServiceResponse>{
+public class VolleyRequest extends Request<Object>{
 
     private int action;
     private String postData;
@@ -51,30 +51,30 @@ public class VolleyRequest extends Request<ServiceResponse>{
         this.contentType = contentType;
     }
 
+
     @Override
-    protected Response parseNetworkResponse(NetworkResponse networkResponse) {
+    protected Response<Object> parseNetworkResponse(NetworkResponse response) {
         try {
 
-            String jsonString = new String(networkResponse.data, HttpHeaderParser.parseCharset(networkResponse.headers));
-            Log.d("VolleyResponse", jsonString);
+            String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            Log.d("VolleyGenericRequest", jsonString);
+            ServiceResponse serviceResponse = new ServiceResponse();
+            serviceResponse.setAction(action);
+            serviceResponse.setJsonString(jsonString);
+            serviceResponse.setErrorCode(1);
+            Response<Object> resp = Response.success((Object) (serviceResponse), HttpHeaderParser.parseCacheHeaders(response));
 
-            ServiceResponse response = new ServiceResponse();
-            response.setAction(action);
-            response.setJsonString(jsonString);
-            response.setErrorCode(1);
-            successListener.onResponse(response);
-            return null;
-
+            return resp;
         } catch (Exception e) {
-            Log.e("Response",e.getMessage());
-            errorListener.onErrorResponse(new ParseError(e));
-            return null;
+            return Response.error(new ParseError(e));
         }
     }
 
-    @Override
-    protected void deliverResponse(ServiceResponse serviceResponse) {
 
+    @Override
+    protected void deliverResponse(Object object) {
+        Log.e("Far","delevery response..");
+        successListener.onResponse(object);
     }
 
 

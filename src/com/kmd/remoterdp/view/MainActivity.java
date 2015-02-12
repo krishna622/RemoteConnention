@@ -1,6 +1,8 @@
 package com.kmd.remoterdp.view;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 import com.kmd.remoterdp.R;
 import com.kmd.remoterdp.adapter.MainAdapter;
@@ -32,6 +34,12 @@ public class MainActivity extends BaseActivity {
         mList = (ListView) findViewById(R.id.list);
         /*adapter = new MainAdapter(MainActivity.this);
         mList.setAdapter(adapter);*/
+        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MainActivity.this,"UnderDevelopment",Toast.LENGTH_SHORT).show();
+            }
+        });
         showProgressDialog();
         try{
         JSONObject jsonObject = new JSONObject();
@@ -65,10 +73,17 @@ public class MainActivity extends BaseActivity {
                                 serverList.add(i,ipResponse);
                             }
                           Log.d("server", jsonArray.toString());
-                          adapter = new MainAdapter(MainActivity.this);
+                          adapter = new MainAdapter(MainActivity.this,serverList);
                           mList.setAdapter(adapter);
                       }else{
-                          Toast.makeText(MainActivity.this,"Database Empty",Toast.LENGTH_SHORT).show();
+                          //Toast.makeText(MainActivity.this,"Database Empty",Toast.LENGTH_SHORT).show();
+                          ServerIpResponse ipResponse = new ServerIpResponse();
+                          ipResponse.setServerid("3389");
+                          ipResponse.setServername("networkwindow.us");
+                          ipResponse.setHost("networkwindow.us");
+                          serverList.add(ipResponse);
+                          adapter = new MainAdapter(MainActivity.this,serverList);
+                          mList.setAdapter(adapter);
                       }
                   }catch(Exception e){}
                   break;

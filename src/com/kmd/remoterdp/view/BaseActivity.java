@@ -55,7 +55,7 @@ public class BaseActivity extends Activity implements Response.Listener, Respons
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String errorMsg = "";
+                String errorMsg = "Some thing went wrong.";
                 if( error instanceof NetworkError) {
                     errorMsg = "Network Connection is not available.";
                 } else if( error instanceof ServerError) {

@@ -5,6 +5,7 @@
     android:paddingLeft="@dimen/dp_5"
     android:orientation="vertical" >
     <TextView
+            android:visibility="gone"
             android:id="@+id/txt_server_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,6 +21,7 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/sp_14" />
     <TextView
+            android:visibility="gone"
             android:id="@+id/txt_host"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

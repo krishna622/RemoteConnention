@@ -195,7 +195,7 @@ public class RegistrationActivity extends BaseActivity implements OnClickListene
 								case 2:
 									mPref.putString(RDPConstants.registrationStatus,"1");
 									mPref.putString(RDPConstants.contactStatus,"2");
-									Toast.makeText(this, "Your data has been updated", Toast.LENGTH_SHORT).show();
+									//Toast.makeText(this, "Your data has been updated", Toast.LENGTH_SHORT).show();
 									Intent intentHome = new Intent(RegistrationActivity.this,MainActivity.class);
 									startActivity(intentHome);
 									finish();
